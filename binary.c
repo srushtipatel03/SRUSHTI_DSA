@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int binary_serach(int a[], int d, int n)
+int binary_search(int a[], int d, int n)
 {
     int l = 0, h = n - 1, mid;
 
@@ -40,7 +40,7 @@ int main()
     printf("\nEnter Element Number : ");
     scanf("%d", &d);
 
-    b = binary_serach(a, d, n);
+    b = binary_search(a, d, n);
 
     if (b > 0)
     {
