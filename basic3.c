@@ -1,4 +1,4 @@
-//merege two array
+//merge two array
 
 #include<stdio.h>
 
