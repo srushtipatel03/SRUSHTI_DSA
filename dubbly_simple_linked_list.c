@@ -5,6 +5,7 @@ struct node
 {
     int data;
     struct node *next;
+    struct node *prev;
 };
 struct node *head = NULL;
 
@@ -14,6 +15,7 @@ void insertEnd(int val)
     struct node *temp = malloc(sizeof(struct node));
     temp->data = val;
     temp->next = NULL;
+    temp->prev = NULL;
 
     if (head == NULL)
     {
@@ -25,39 +27,10 @@ void insertEnd(int val)
         ptr = ptr->next;
     }
     ptr->next = temp;
+    temp->prev = ptr;
     return;
 }
-void insertFirst(int val)
-{
-    struct node *ptr = head;
-    struct node *temp = malloc(sizeof(struct node));
-    temp->data = val;
 
-    if (head == NULL)
-    {
-        temp->next = NULL;
-        head = temp;
-        return;
-    }
-    temp->next = ptr;
-    head = temp;
-    return;
-}
-void insertMid(int val, int pos)
-{
-    struct node *ptr = head;
-    struct node *temp = malloc(sizeof(struct node));
-    temp->data = val;
-
-    while (ptr->data != pos)
-    {
-        ptr = ptr->next;
-    }
-
-    temp->next = ptr->next;
-    ptr->next = temp;
-    return;
-}
 void deleteEnd()
 {
     struct node *ptr = head;
@@ -76,13 +49,33 @@ void deleteEnd()
     }
     while (ptr->next != NULL)
     {
-        prev = ptr;
         ptr = ptr->next;
     }
-    prev->next = NULL;
+    ptr->prev->next = NULL;
     free(ptr);
     return;
 }
+
+void insertFirst(int val)
+{
+    struct node *ptr = head;
+    struct node *temp = malloc(sizeof(struct node));
+    temp->data = val;
+
+    if (head == NULL)
+    {
+        temp->next = NULL;
+        temp->prev = NULL;
+        head = temp;
+        return;
+    }
+    temp->next = ptr;
+    temp->prev = NULL;
+    ptr->prev = temp;
+    head = temp;
+    return;
+}
+
 void deleteFirst()
 {
     struct node *ptr = head;
@@ -98,9 +91,30 @@ void deleteFirst()
         return;
     }
     head = ptr->next;
+    head->prev = NULL;
     free(ptr);
     return;
 }
+
+void insertMid(int val, int pos)
+{
+    struct node *ptr = head;
+    struct node *temp = malloc(sizeof(struct node));
+    temp->data = val;
+
+    while (ptr->data != pos)
+    {
+        ptr = ptr->next;
+    }
+
+    temp->next = ptr->next;
+    temp->prev = ptr;
+    ptr->next->prev = temp;
+    ptr->next = temp;
+
+    return;
+}
+
 void deleteMid(int pos)
 {
     struct node *ptr = head;
@@ -111,10 +125,13 @@ void deleteMid(int pos)
         prev = ptr;
         ptr = ptr->next;
     }
-    prev->next = ptr->next;
+    ptr->prev->next = ptr->next;
+    ptr->next->prev = ptr->prev;
+
     free(ptr);
     return;
 }
+
 void display()
 {
     struct node *ptr = head;
@@ -132,6 +149,7 @@ void display()
         printf("\n");
     }
 }
+
 int main()
 {
     int choice, value, position;
